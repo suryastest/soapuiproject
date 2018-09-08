@@ -1,0 +1,31 @@
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def responseHolder = groovyUtils.getXmlHolder( messageExchange.responseContentAsXml)
+
+responseHolder.namespaces["ns"]="http://tempuri.org/"
+
+def a = responseHolder.getNodeValue("//ns:AddResponse/ns:AddResult")
+
+log.info a
+
+----------------------------------------------------------------------------
+
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context ) 
+def requsetHolder = groovyUtils.getXmlHolder( messageExchange.requestContentAsXml )
+def a = requsetHolder.getNodeValue("//tem:Add/tem:intA")
+log.info a
+
+-------------------------------------------------------------------------------
+
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def responseHolder = groovyUtils.getXmlHolder( messageExchange.responseContentAsXml)
+
+responseHolder.namespaces["ns"]="http://tempuri.org/"
+
+def a = responseHolder.getNodeValue("//ns:AddResponse/ns:AddResult")
+
+assert a[]!=null
+
+-------------------------------------------------------------------------------------
+
+assert messageExchange.timeTaken > 400
+------------------------------------------------------------------------------------

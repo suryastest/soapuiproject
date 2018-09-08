@@ -1,0 +1,112 @@
+Properties Creation 
+**********************************************
+Cretae Project Level Properties
+********************************************************************
+testRunner.testCase.testSuite.project.setPropertyValue("projectprop","100")
+Print Project Level Properties
+*******************************************************************
+testRunner.testCase.testSuite.project.getPropertyValue("projectprop")
+
+Create Test Suite level Properties
+*****************************************************************
+testRunner.testCase.testSuite.setPropertyValue("suiteprop","Webservices")
+
+Print Test Suite Properties
+****************************************************************
+testRunner.testCase.testSuite.getPropertyValue("suiteprop")
+
+Create Test Case Level Properties
+*****************************************************
+testRunner.testCase.setPropertyValue("caseprop","150")
+
+Print Test Case Level Properties 
+******************************************************
+testRunner.testCase.getPropertyValue("caseprop")
+
+Create Global Level Properties
+******************************************************************
+
+com.eviware.soapui.SoapUI.globalProperties.setPropertyValue( "MyProp", "someValue")
+
+Print Global Level Properties
+*********************************************************************
+com.eviware.soapui.SoapUI.globalProperties.getPropertyValue( "MyProp")
+
+
+Read Response
+***************************************************
+def res=context.expand( '${SOAP Request#Response}')
+
+testRunner.testCase.setPropertyValue("caseprop",res)
+
+log.info testRunner.testCase.getPropertyValue("caseprop")
+
+Read Request
+*******************************************************
+def res=context.expand( '${SOAP Request#Request}')
+
+testRunner.testCase.setPropertyValue("caseprop",res)
+
+log.info testRunner.testCase.getPropertyValue("caseprop")
+-------------------------------------------------------------
+Print Response Element
+***********************************************************
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+def holder = groovyUtils.getXmlHolder("SOAP Request#Response")
+holder.namespaces["ns"] = "http://tempuri.org/"
+def val= holder.getNodeValue("//ns:AddResult")
+log.info val
+
+-------------------------------------------------------------
+Data Sink
+*************************************************************
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+def holder = groovyUtils.getXmlHolder("SOAP Request#Response")
+holder.namespaces["ns"] = "http://tempuri.org/"
+def val= holder.getNodeValue("//ns:AddResponse/ns:AddResult")
+log.info val
+
+testRunner.testCase.setPropertyValue("myprop",val)
+
+def ab = testRunner.testCase.getPropertyValue("myprop")
+
+def fileName = "test1.txt"
+
+def inputFile = new File("D://"+fileName)
+
+inputFile.write(ab)
+
+******************************************
+
+new File ("D://"+"test2.txt").write(ab)
+
+
+Property Transfer
+***********************
+def utils = new com.eviware.soapui.support.GroovyUtils(context)
+
+def holder = utils.getXmlHolder("SOAP Request#Response")
+
+def value = holder.getNodeValue("//ns1:AddResponse/ns1:AddResult")
+
+def hold = utils.getXmlHolder("SOAP Request2#Request")
+
+//log.info value
+
+hold.setNodeValue("//tem:Multiply[1]/tem:intA",value)
+
+hold.updateProperty()
+
+def result = testRunner.runTestStepByName("SOAP Request2")
+
+//log.info result
+
+**********************************************************
+def logClass=log.getClass()
+log.info "The class name of Log is $logClass"
+log.info "The class for context is ${context.getClass()}"
+def prop=context.expand('${#TestCase#name}')
+log.info prop
+log.info context.getCurrentStep().getLabel()
+
+log.info context.getTestCase().getProperty("name").getValue()
